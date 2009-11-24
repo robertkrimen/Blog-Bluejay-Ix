@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+(require Blog::Bluejay::GetoptChain)->new->run;
+
+1;
