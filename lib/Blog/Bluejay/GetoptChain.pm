@@ -49,7 +49,7 @@ use Getopt::Chain::Declare;
 context 'Blog::Bluejay::GetoptChain::Context';
 require Blog::Bluejay::GetoptChain::Context;
 
-start [qw/ /], sub {
+start [qw/ home=s /], sub {
     my $ctx = shift;
 
     if (defined ( my $home = $ctx->option( 'home' ) ) ) {
@@ -70,8 +70,10 @@ on 'setup *' => undef, sub {
         $home = Path::Class::dir( shift );
         $ctx->bluejay->home( $home );
     }
+    elsif ( $home = $ctx->bluejay->home ) {
+    }
     else {
-        $home = $ctx->bluejay->home;
+        $home = $ctx->bluejay->home( Blog::Bluejay::FindHomeDir->cwd );
     }
     $home = $home->absolute;
 
@@ -151,9 +153,12 @@ To control your blog, you can either setup the following script:
 _END_
 };
 
-1;
+on 'update' => undef, sub {
+    my $ctx = shift;
 
-__END__
+    $ctx->bluejay->update;
+
+};
 
 rewrite qr/^post-edit$/ => sub { 'edit' };
 on 'edit *' => undef, sub {
@@ -164,6 +169,7 @@ on 'edit *' => undef, sub {
     my ($post, $search, $count) = $ctx->find_post( @_ );
 
     if ($post) {
+#        $post->document->read;
         $post->edit;
     }
     else {
@@ -174,6 +180,10 @@ on 'edit *' => undef, sub {
         }
     }
 };
+
+__PACKAGE__;
+
+__END__
 
 on 'reset' => undef, sub {
     my $ctx = shift;
