@@ -21,7 +21,7 @@ is( Blog::Bluejay::FindHomeDir->find( 't/assets/home1' ),
 is( Blog::Bluejay::FindHomeDir->find( 't/assets/home2/a/b/c' ),
         dir( 't/assets/home2/a' )->absolute );
 
-{
+if (0) {
     my $run_dir = tempdir;
     my $bluejay = Blog::Bluejay->new( home => 't/assets/home3/' ); 
     $bluejay->path_mapper->map( '/run' => $run_dir );
